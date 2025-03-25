@@ -1,7 +1,5 @@
 import { ElementType, useState } from "react";
-import AdminProfileInformation from "./admin-profileInformation";
 import UserManagementTable from "@/app/(pages)/setup/_setupComponets/userManagementTable";
-import UserRole from "@/app/(pages)/setup/_setupComponets/userRoleTable";
 import ManagePermissions from "@/app/(pages)/setup/manage-account/_components/ManagePermissions";
 import InviteUsersTable from "@/app/(pages)/setup/_setupComponets/InviteUsersTable";
 import UserRoleTable from "@/app/(pages)/setup/_setupComponets/user-role-table";
@@ -28,11 +26,6 @@ export default function MainManageAccount() {
       name: "Invite Users",
       component: InviteUsersTable,
     },
-    // {
-    //   id: "5",
-    //   name: "Profile Information",
-    //   component: AdminProfileInformation,
-    // },
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -72,11 +65,6 @@ export default function MainManageAccount() {
 
       {/* Render the current step component */}
       <StepComponent onNext={onNext} onPrev={onPrev} />
-
-      {/* {currentStep > 0 && <button onClick={onPrev}>Back</button>} */}
-      {/* <button onClick={onPrev} disabled={currentStep === steps.length - 1}>
-				Back
-			</button> */}
     </section>
   );
 }
