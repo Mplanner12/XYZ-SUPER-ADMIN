@@ -1,0 +1,33 @@
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.custom-select-wrapper select {
+  padding: 10px 40px 10px 10px; /* Adjust as needed */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.custom-select-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #8133f1; /* Arrow color */
+  transform: translateY(-50%);
+}

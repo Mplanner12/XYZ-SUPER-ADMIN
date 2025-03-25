@@ -1,0 +1,29 @@
+.stepper-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.step-product {
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.step-product.active {
+  background-color: #fff;
+  color: #8133f1;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.step-product.completed {
+  background-color: transparent;
+  color: #fff;
+}
+
+.step-buttons {
+  margin-top: 20px;
+}

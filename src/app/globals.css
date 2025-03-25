@@ -1,0 +1,318 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-sm text-[#434343] leading-[normal] m-0;
+}
+
+.font-DmSans {
+  font-family: 'DM Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  text-decoration: none;
+  color: inherit;
+  margin: 0;
+}
+
+*,
+::before,
+::after {
+  border-width: 0;
+}
+
+.border-bottom-red {
+  border-bottom: 2px solid #d9534f; /* Tailwind's red-600 color code */
+}
+
+.table-header-cell {
+  padding: 10px;
+  text-align: left;
+}
+
+h1 {
+  @apply text-[28px] font-bold leading-[28.8px];
+}
+h2 {
+  @apply font-semibold text-[24px] leading-[20px];
+}
+h3 {
+  @apply text-[20px] font-semibold;
+}
+
+.primary-btn {
+  @apply block px-[24px] py-[8px] rounded-[16px] bg-primary-normal;
+}
+.secondary-btn {
+  @apply block px-[24px] py-[8px] rounded-[16px];
+}
+
+/* Auth error styling starts */
+.error-message {
+  color: rgb(208, 53, 53);
+  font-size: 14px;
+  font-weight: 400;
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+/* Auth error styling ends */
+
+/* verify email styling start */
+
+.spin-button-none::-webkit-outer-spin-button,
+.spin-button-none::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -moz-appearance: textfield;
+}
+
+.spin-button-none {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: none; /* Standard syntax for other browsers */
+}
+
+/* Chrome, Safari, Edge, Opera */
+/* generic styling */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: none;
+  margin: 0;
+}
+
+/* input {
+    @apply outline-none border-foundation-grey-grey-600 placeholder:text-foundation-grey-grey-600 focus:border-2 focus:border-solid focus:border-foundation-purple-purple-100 focus:bg-foundation-grey-grey-50;
+} */
+
+select {
+  background-color: #fff;
+}
+
+/* styles/globals.css */
+.stepper-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.step {
+  width: 30px;
+  height: 6px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  margin: 5px 0;
+  background-color: #e9e8e8;
+  color: #999;
+  cursor: pointer;
+}
+
+.step.active {
+  background-color: #b78af7;
+}
+
+.step.completed {
+  background-color: #b78af7;
+}
+
+.step-buttons {
+  margin-top: 20px;
+}
+
+.prev-btn,
+.next-btn {
+  margin-right: 10px;
+}
+
+/* date input styling  */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%238133f1" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+  margin-left: 0;
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* no scrollbar */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* price and payment checkbox styling */
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #8133f1;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-checkbox:checked {
+  background-color: #8133f1;
+  position: relative;
+}
+
+.custom-checkbox:checked::before {
+  content: "\2713";
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  right: 3px;
+  top: 0;
+}
+
+.pricing-setup p {
+  margin: 0;
+}
+
+@media (max-width: 1135px) {
+  .dashboard-cards-container {
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px; /* Ensure consistent gap between cards */
+  }
+}
+
+input[type="checkbox"]:checked + .border-purple {
+  border-color: #8133f1;
+  background-color: #8133f1;
+}
+
+input[type="checkbox"]:checked + .border-purple svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #8133f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ceb0fa;
+}
+
+/* pop over border radius */
+.css-3bmhjh-MuiPaper-root-MuiPopover-paper {
+  border-radius: 11px !important;
+}
+
+.table-row-hover:hover {
+  cursor:
+    url("/magnify.svg") 1 1,
+    auto;
+  transform: scale(0.95);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* sidebar styling */
+
+.sidebar {
+  -webkit-animation: slide-right 0.5s ease-in-out both;
+  animation: slide-right 0.5s ease-in-out both;
+  -moz-animation: slide-right 0.5s ease-in-out both;
+}
+
+@keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(50%);
+    transform: translate(50%);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+@-webkit-keyframes slide-right {
+  0% {
+    -webkit-transform: translateX(50%);
+    transform: translateX(50%);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+/* pricing page styling  */
+
+.linear-gradient {
+  background: linear-gradient(to right, #f9f5fe, #d9d9d9);
+}
+
+/* General Styling for react-select */
+.react-select__control {
+  padding: 0.5rem;
+  min-height: 40px; /* Uniform height for all select fields */
+  box-shadow: none; /* Remove default shadow */
+}
+
+.react-select__control--is-focused {
+  outline: none; /* Remove default outline */
+  box-shadow: none; /* Remove focus shadow */
+}
+
+/* Customize the arrow dropdown color */
+.react-select__indicator {
+  color: #ceb0fa; /* Purple color for the arrow */
+}
+
+/* Customize placeholder and value text */
+.react-select__single-value,
+.react-select__placeholder {
+  font-size: 14px;
+}
+
+.custom-select {
+  appearance: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.custom-select:hover {
+  background-color: #f9f9f9; /* Light gray background on hover */
+}
+
+.custom-select:focus {
+  border-color: #8133f1;
+  box-shadow: 0 0 0 2px rgba(129, 51, 241, 0.3); /* Purple focus ring */
+}
+
+.custom-select option {
+  font-size: 14px;
+  color: #242424;
+  padding: 10px;
+}
