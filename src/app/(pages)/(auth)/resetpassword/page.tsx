@@ -1,138 +1,166 @@
-"use client"
-import NavButton from '@/components/_landingpgComponents/navButton';
-import { useSendOtp } from '@/hooks/mutate';
-import { setUser } from '@/redux/Slices/AuthSlice/authSlice';
-import { useAppDispatch } from '@/redux/Store';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { error } from 'console';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import {
-  authImage,
-  logoxyz,
-} from '../../../../../public';
-import { data } from '../../sales/_salesComponent/salesDistribution';
-import { emailRegex } from '../RegexFile';
+"use client";
+import NavButton from "@/components/_landingpgComponents/navButton";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useState } from "react";
+import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { authImage, logoxyz, vector102 } from "../../../../../public";
 
-const resetPasswordSchema = z.object({
-	email_address: z
-		.string()
-		.email({ message: 'Please enter a valid email.' })
-		.trim(),
+const emailSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
 });
 
-type ResetPasswordData = z.infer<typeof resetPasswordSchema>
+const resetPasswordSchema = z.object({
+  code: z.string().min(6, "Code must be at least 6 characters"),
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+});
 
-export default function ResetPassword() {
-  const dispatch = useAppDispatch();
+type EmailData = z.infer<typeof emailSchema>;
+type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 
-  const { mutate: resetPasswordMutate, isPending } = useSendOtp();
+export default function ForgotPassword() {
+  const [stage, setStage] = useState<"request" | "reset">("request");
 
-  const {register, handleSubmit, formState: {errors}} = useForm<ResetPasswordData>({
-    resolver: zodResolver(resetPasswordSchema)
+  // Form for requesting a reset code
+  const {
+    handleSubmit: handleEmailSubmit,
+    register: registerEmail,
+    formState: { errors: emailErrors },
+  } = useForm<EmailData>({
+    resolver: zodResolver(emailSchema),
   });
 
-  const onSubmit: SubmitHandler<ResetPasswordData> = (data) => {
-    resetPasswordMutate(
-			{
-				data,
-			},
-			{
-				onSuccess: () => {
-					const email = data?.email_address;
+  // Form for resetting the password
+  const {
+    handleSubmit: handleResetSubmit,
+    register: registerReset,
+    formState: { errors: resetErrors },
+  } = useForm<ResetPasswordData>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
 
-					dispatch(
-						setUser({
-							email: data?.email_address,
-						})
-					);
+  const onRequestCode: SubmitHandler<EmailData> = (data) => {
+    // Simulate API call
+    console.log("Requesting reset code for:", data.email);
+    toast.success("Reset code sent to your email!");
+    setStage("reset");
+  };
 
-					if (email) {
-						localStorage.setItem('local store email', email);
-					}
-				},
-			}
-		);
-  }
-    
+  const onResetPassword: SubmitHandler<ResetPasswordData> = (data) => {
+    // Simulate API call
+    console.log("Resetting password with code:", data.code);
+    toast.success("Password reset successfully!");
+  };
 
-	return (
-		<section className="bg-foundation-white-white-400 flex justify-center items-center text-gray-500">
-			<div className="flex flex-col md:flex-row justify-center items-center gap-4 py-6 px-6 sm:px-8 w-full">
-				<div
-					className="flex h-screen md:w-full flex-col just
-        .ify-start items-start text-start"
-				>
-					<div className="mb-4">
-						<Link href={'/'}>
-							<Image
-								src={logoxyz}
-								alt=""
-								className="w-[98px] h-10 object-contain"
-							/>
-						</Link>
-					</div>
-					<div className="flex flex-col w-full align-middle justify-center items-center text-base font-inter sm:my-8 my-4 sm:h-[70%] h-auto">
-						<div className="max-w-[350px] w-full flex flex-col justify-start text-start items-center">
-							<h2 className=" w-full font-normal text-start text-gray-700 mb-7">
-								Reset Password
-							</h2>
-							<p className=" w-full font-normal text-start text-gray-700 mb-7">
-								Kindly enter the email address you registered with us when you
-								created the account.
-							</p>
-							<form
-								className="w-full"
-								method="POST"
-								onSubmit={handleSubmit(onSubmit)}
-							>
-								<div>
-									<label htmlFor="email_address" className="block mb-4">
-										<span className=" text-foundation-grey-grey-900">
-											Email Address
-										</span>
-										<input
-											type="email"
-											id="email_address"
-											placeholder="e.g business@gmail.com"
-											className="px-4 py-3 mt-2 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
-											{...register('email_address', {
-												required: true,
-												pattern: emailRegex,
-											})}
-										/>
-										{/* error handler */}
-										{errors.email_address && (
-											<span className="error-message px-2">
-												{errors.email_address.message}
-											</span>
-										)}
-									</label>
-								</div>
-								<NavButton
-									styles={`w-full mb-6 mt-2 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100`}
-								>
-									Submit
-								</NavButton>
-							</form>
-						</div>
-					</div>
-					<h3 className="md:w-[293px] w-full leading-[24px] text-base font-normal text-wrap my-0 text-[#d0d0d0]">
-						© 2024 XYZ. All rights reserved.
-					</h3>
-				</div>
-				<div className="h-auto bg-foundation-purple-purple-400 rounded-xl sm:px-0 px-4">
-					<Image
-						src={authImage}
-						alt=""
-						className="max-w-[1050px] w-auto h-screen object-contain"
-					/>
-				</div>
-			</div>
-		</section>
-	);
+  return (
+    <section className="bg-foundation-white-white-400 flex justify-center items-center text-gray-500 lg:p-28 h-screen">
+      <div className="py-6 px-6 sm:px-16 w-full">
+        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg">
+          <div className="flex h-auto w-full flex-col justify-between items-start text-start px-4 py-2 md:py-0">
+            <div className="mb-2">
+              <Link href={"/"}>
+                <Image
+                  src={logoxyz}
+                  alt=""
+                  className="w-[74px] h-7 object-contain"
+                />
+              </Link>
+            </div>
+            <div className="flex flex-col w-full justify-center items-center text-base font-inter sm:mt-6 lg:mt-4">
+              <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
+                <h2 className="w-full font-normal text-start text-gray-700 mb-5 font-DmSans">
+                  {stage === "request"
+                    ? "Forgot Password"
+                    : "Reset Your Password"}
+                </h2>
+
+                {stage === "request" ? (
+                  <form
+                    className="w-full"
+                    method="POST"
+                    onSubmit={handleEmailSubmit(onRequestCode)}
+                  >
+                    <label htmlFor="email" className="block mb-2.5">
+                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                        Email Address
+                      </span>
+                      <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email address"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        {...registerEmail("email")}
+                      />
+                      {emailErrors.email && (
+                        <span className="error-message px-2">
+                          {emailErrors.email.message}
+                        </span>
+                      )}
+                    </label>
+                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
+                      Send Reset Code
+                    </NavButton>
+                  </form>
+                ) : (
+                  <form
+                    className="w-full"
+                    method="POST"
+                    onSubmit={handleResetSubmit(onResetPassword)}
+                  >
+                    <label htmlFor="code" className="block mb-2.5">
+                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                        Reset Code
+                      </span>
+                      <input
+                        type="text"
+                        id="code"
+                        placeholder="Enter the reset code"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        {...registerReset("code")}
+                      />
+                      {resetErrors.code && (
+                        <span className="error-message px-2">
+                          {resetErrors.code.message}
+                        </span>
+                      )}
+                    </label>
+                    <label htmlFor="newPassword" className="block mb-2.5">
+                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                        New Password
+                      </span>
+                      <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Enter your new password"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        {...registerReset("newPassword")}
+                      />
+                      {resetErrors.newPassword && (
+                        <span className="error-message px-2">
+                          {resetErrors.newPassword.message}
+                        </span>
+                      )}
+                    </label>
+                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
+                      Reset Password
+                    </NavButton>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full flex justify-center items-center pb-5">
+            <Image
+              src={authImage}
+              alt=""
+              className="max-w-[1580px] w-auto h-fit object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
