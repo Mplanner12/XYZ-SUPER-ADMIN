@@ -21,7 +21,7 @@ export default function Hero() {
           {" "}
           Welcome to XYZ Company!{" "}
         </h1>{" "}
-        <p className="text-center text-foundation-grey-grey-800 text-xl flex-wrap max-w-[960px]">
+        <p className="text-center text-foundation-grey-grey-800 dark:text-white text-xl flex-wrap max-w-[960px]">
           {" "}
           {"We're"} thrilled to have you here. At XYZ, {"we're"} dedicated to
           providing innovative solutions that meet the needs of our customers.

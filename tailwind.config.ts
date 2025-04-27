@@ -7,6 +7,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    darkMode: "class",
     extend: {
       colors: {
         primary: {
@@ -22,7 +23,7 @@ const config: Config = {
         "foundation-grey-grey-900": "#575757",
         "foundation-grey-grey-600": "#bcbbbb",
         whitesmoke: "#eaecf0",
-        borderColor: '#F0F0F0',
+        borderColor: "#F0F0F0",
         gray1: {
           "100": "#939292",
           "200": "rgba(250, 250, 250, 0.5)",
@@ -51,8 +52,8 @@ const config: Config = {
         custom: "0px 2px 10px 0px #0000001A",
       },
       screens: {
-        'xl': '1400px', 
-        '2xl': '1520px',  // Screens that are 1920px or wider
+        xl: "1400px",
+        "2xl": "1520px", // Screens that are 1920px or wider
       },
     },
   },

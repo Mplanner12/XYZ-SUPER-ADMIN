@@ -69,11 +69,15 @@ export default function Navbar() {
             {navLinks.map((nav, index) => (
               <li
                 key={nav.title}
-                className="gap-[32px] flex hover:text-foundation-black-black-400 hover:font-bold text-foundation-black-black-400 cursor-pointer"
+                className="gap-[32px] flex hover:text-foundation-black-black-400 hover:font-bold text-foundation-black-black-400 dark:text-foundation-grey-grey-200 cursor-pointer"
               >
                 <a
                   href={`${nav.link}${nav.id}`}
-                  className={`${nav.link === pathname && nav.id === activeId && "text-foundation-black-black-400 font-bold"} capitalize transition-all`}
+                  className={`${
+                    nav.link === pathname &&
+                    nav.id === activeId &&
+                    "text-foundation-black-black-400 dark:text-white font-bold"
+                  } capitalize transition-all`}
                 >
                   {nav.title}
                 </a>
