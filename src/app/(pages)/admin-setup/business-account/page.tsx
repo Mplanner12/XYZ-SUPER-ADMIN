@@ -1,6 +1,5 @@
 import React from "react";
-import CompanyForm from "../../setup/business-account/_components/companyForm";
-
+import CompanyForm from "../../admin-setup/_components/companyForm";
 
 export default function AdminBusinessAccount() {
   return (
