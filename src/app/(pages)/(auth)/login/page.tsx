@@ -146,8 +146,8 @@ export default function LogIn() {
                   <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
                     {isPending ? "Logging in..." : "Login"}
                   </NavButton>
-                  <div className="flex justify-between items-center px-[0.85rem]">
-                    {/* testing path to access */}
+                  {/* <div className="flex justify-between items-center px-[0.85rem]">
+                    testing path to access
                     <p className="text-[0.9rem] text-gray-700 text-center my-0">
                       direct access
                       <Link
@@ -158,7 +158,7 @@ export default function LogIn() {
                         Setup page
                       </Link>
                     </p>
-                  </div>
+                  </div> */}
                 </form>
               </div>
             </div>
