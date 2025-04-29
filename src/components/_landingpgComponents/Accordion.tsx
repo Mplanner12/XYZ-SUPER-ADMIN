@@ -63,8 +63,10 @@ export default function AccordionExpandDefault() {
           sx={{
             border: "none", // Removing the border
             boxShadow: "none",
+            backgroundColor: "transparent",
+            color: "#fff",
           }}
-          className="border-b-2 border-foundation-grey-grey-800 flex flex-col mb-3 py-4 font-DmSans"
+          className="border-b-2 border-foundation-purple-purple-400/30 flex flex-col mb-3 py-4 font-DmSans group hover:border-foundation-purple-purple-300/50 transition-colors duration-300"
         >
           <AccordionSummary
             expandIcon={
@@ -72,15 +74,26 @@ export default function AccordionExpandDefault() {
                 src={open[index] ? minuscircle : pluscircle}
                 alt=""
                 loading="lazy"
+                className="filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-300"
               />
             }
             aria-controls={`panel${index}-content`}
             id={`panel${index}-header`}
+            sx={{
+              color: "#fff",
+              "&:hover": {
+                color: "#ceb0fa",
+              },
+            }}
           >
-            <Typography className="font-semibold">{faq.title}</Typography>
+            <Typography className="font-semibold text-foundation-white-white-400 group-hover:text-foundation-purple-purple-100 transition-colors duration-300">
+              {faq.title}
+            </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography align="left">{faq.answer}</Typography>
+            <Typography align="left" className="text-foundation-grey-grey-300">
+              {faq.answer}
+            </Typography>
           </AccordionDetails>
         </Accordion>
       ))}

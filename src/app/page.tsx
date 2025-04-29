@@ -18,7 +18,7 @@ import { heroframe } from "../../public";
 export default function LandingPage() {
   return (
     <section className=" bg-white dark:bg-foundation-grey-grey-900 w-full overflow-hidden h-full">
-      <div className="bg-foundation-grey-grey-50 dark:bg-foundation-grey-grey-900 px-4 py-[10px] w-[100%] sm:px-6 fixed z-[998]">
+      <div className="bg-foundation-grey-grey-50 dark:bg-foundation-purple-purple-900  px-4 py-[10px] w-[100%] sm:px-6 fixed z-[998]">
         <Navbar />
       </div>
       <div className="flex flex-wrap relative">
@@ -29,12 +29,12 @@ export default function LandingPage() {
         />
         <Hero />
       </div>
-      <div className="py-5 md:py-7 sm:mt-12 mt-8 relative">
+      <div className="bg-foundation-purple-purple-900 py-5 md:py-7 sm:mt-12 mt-8 relative">
         <Features />
       </div>
-      <div className="bg-foundation-grey-grey-900 absolute z-[50] h-px w-full opacity-[0.3]" />
+      <div className="bg-foundation-purple-purple-900 absolute z-[50] h-px w-full opacity-[0.3]" />
 
-      <div className="py-12 md:py-8">
+      <div className="">
         <Product />
       </div>
       <div className="bg-foundation-grey-grey-50 dark:bg-foundation-grey-grey-900 w-full overflow-hidden">

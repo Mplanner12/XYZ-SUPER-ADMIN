@@ -5,7 +5,7 @@ import "./globals.css";
 import ReduxProvider from "./ReduxProvider";
 import { SidebarProvider } from "@/hooks/contextApi/SidebarContext";
 import { ModalProvider } from "@/util/Modals/ModalsContext";
-import { AuthProvider } from "@/components/providers/AuthProviders";
+// import { AuthProvider } from "@/components/providers/AuthProviders";
 import { ThemeProvider } from "@/context/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,17 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <ReduxProvider>
-            <ThemeProvider>
-              <SidebarProvider>
-                <Provider>
-                  <ModalProvider>{children}</ModalProvider>
-                </Provider>
-              </SidebarProvider>
-            </ThemeProvider>
-          </ReduxProvider>
-        </AuthProvider>
+        <ReduxProvider>
+          <ThemeProvider>
+            <SidebarProvider>
+              <Provider>
+                <ModalProvider>{children}</ModalProvider>
+              </Provider>
+            </SidebarProvider>
+          </ThemeProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

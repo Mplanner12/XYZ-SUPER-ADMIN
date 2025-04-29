@@ -1,6 +1,6 @@
 "use client"
 
-import ProceedPaymentModal from '@/app/(pages)/setup/price-payment/_priceComponent/PaymentModal';
+// import ProceedPaymentModal from '@/app/(pages)/setup/price-payment/_priceComponent/PaymentModal';
 import NavButton from '@/components/_landingpgComponents/navButton';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FaAngleDown, FaAnglesUp, FaAngleUp } from 'react-icons/fa6';
@@ -349,7 +349,7 @@ const MonthlyPricing: React.FC = () => {
               <input type="checkbox" className="custom-checkbox" />I agree to
               the terms & conditions for payment methods
             </label>
-            <ProceedPaymentModal isOpen={isModalOpen} onClose={closeModal} />
+            {/* <ProceedPaymentModal isOpen={isModalOpen} onClose={closeModal} /> */}
           </form>
         </div>
       </div>

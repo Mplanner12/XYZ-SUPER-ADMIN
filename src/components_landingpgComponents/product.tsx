@@ -25,7 +25,7 @@ const featureCard = [
 
 export default function Product() {
   return (
-    <div className="w-full flex justify-center items-center text-[40px] px-6 md:px-8 py-8 md:py-14 dark:bg-foundation-black-black-500">
+    <div className="w-full flex justify-center items-center text-[40px] px-6 md:px-8 dark:bg-foundation-black-black-500">
       <div className="flex flex-col items-center justify-start">
         <div className="flex flex-col items-center justify-center gap-[16px]">
           <div className="text-foundation-black-black-400 text-center flex-wrap dark:text-foundation-white-white-400">

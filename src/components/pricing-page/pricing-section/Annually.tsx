@@ -1,6 +1,6 @@
 "use client";
 
-import ProceedPaymentModal from "@/app/(pages)/setup/price-payment/_priceComponent/PaymentModal";
+// import ProceedPaymentModal from "@/app/(pages)/setup/price-payment/_priceComponent/PaymentModal";
 import NavButton from "@/components/_landingpgComponents/navButton";
 import React, { useMemo, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
@@ -428,7 +428,7 @@ const AnnuallyPricing: React.FC = () => {
           </form>
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center w-full mt-2">
+      {/* <div className="flex flex-col justify-center items-center w-full mt-2">
         <NavButton
           onClick={openModal}
           styles="w-fit mb-6 mt-2 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100"
@@ -436,7 +436,7 @@ const AnnuallyPricing: React.FC = () => {
           Proceed to Payment
         </NavButton>
       </div>
-      <ProceedPaymentModal isOpen={isModalOpen} onClose={closeModal} />
+      <ProceedPaymentModal isOpen={isModalOpen} onClose={closeModal} /> */}
     </>
   );
 };
