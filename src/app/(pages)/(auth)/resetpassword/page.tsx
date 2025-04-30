@@ -7,7 +7,7 @@ import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { authImage, logoxyz, vector102 } from "../../../../../public";
+import { authImage, logoxyz } from "../../../../../public";
 
 const emailSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -21,7 +21,7 @@ const resetPasswordSchema = z.object({
 type EmailData = z.infer<typeof emailSchema>;
 type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const [stage, setStage] = useState<"request" | "reset">("request");
 
   // Form for requesting a reset code
@@ -56,11 +56,11 @@ export default function ForgotPassword() {
   };
 
   return (
-    <section className="bg-foundation-white-white-400 flex justify-center items-center text-gray-500 lg:p-28 h-screen">
-      <div className="py-6 px-6 sm:px-16 w-full">
-        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg">
-          <div className="flex h-auto w-full flex-col justify-between items-start text-start px-4 py-2 md:py-0">
-            <div className="mb-2">
+    <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
+      <div className="py-6 px-6 sm:px-16 w-full mt-12 lg:mt-0 relative z-10">
+        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg bg-foundation-black-black-500/80 backdrop-blur-md">
+          <div className="max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-16 py-2 md:py-0">
+            <div className="mb-2 flex justify-start items-center gap-x-2">
               <Link href={"/"}>
                 <Image
                   src={logoxyz}
@@ -68,10 +68,13 @@ export default function ForgotPassword() {
                   className="w-[74px] h-7 object-contain"
                 />
               </Link>
+              <h1 className="text-lg font-semibold text-foundation-purple-purple-400">
+                Reset Password
+              </h1>
             </div>
-            <div className="flex flex-col w-full justify-center items-center text-base font-inter sm:mt-6 lg:mt-4">
+            <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-12">
               <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
-                <h2 className="w-full font-normal text-start text-gray-700 mb-5 font-DmSans">
+                <h2 className="w-full font-normal text-start text-foundation-white-white-400 my-2.5 font-DmSans">
                   {stage === "request"
                     ? "Forgot Password"
                     : "Reset Your Password"}
@@ -84,23 +87,23 @@ export default function ForgotPassword() {
                     onSubmit={handleEmailSubmit(onRequestCode)}
                   >
                     <label htmlFor="email" className="block mb-2.5">
-                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                      <span className="text-foundation-grey-grey-300 text-[0.9rem]">
                         Email Address
                       </span>
                       <input
                         type="email"
                         id="email"
                         placeholder="Enter your email address"
-                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
                         {...registerEmail("email")}
                       />
                       {emailErrors.email && (
-                        <span className="error-message px-2">
+                        <span className="error-message px-2 text-red-500">
                           {emailErrors.email.message}
                         </span>
                       )}
                     </label>
-                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
+                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
                       Send Reset Code
                     </NavButton>
                   </form>
@@ -111,40 +114,40 @@ export default function ForgotPassword() {
                     onSubmit={handleResetSubmit(onResetPassword)}
                   >
                     <label htmlFor="code" className="block mb-2.5">
-                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                      <span className="text-foundation-grey-grey-300 text-[0.9rem]">
                         Reset Code
                       </span>
                       <input
                         type="text"
                         id="code"
                         placeholder="Enter the reset code"
-                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
                         {...registerReset("code")}
                       />
                       {resetErrors.code && (
-                        <span className="error-message px-2">
+                        <span className="error-message px-2 text-red-500">
                           {resetErrors.code.message}
                         </span>
                       )}
                     </label>
                     <label htmlFor="newPassword" className="block mb-2.5">
-                      <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                      <span className="text-foundation-grey-grey-300 text-[0.9rem]">
                         New Password
                       </span>
                       <input
                         type="password"
                         id="newPassword"
                         placeholder="Enter your new password"
-                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0]"
+                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
                         {...registerReset("newPassword")}
                       />
                       {resetErrors.newPassword && (
-                        <span className="error-message px-2">
+                        <span className="error-message px-2 text-red-500">
                           {resetErrors.newPassword.message}
                         </span>
                       )}
                     </label>
-                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
+                    <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
                       Reset Password
                     </NavButton>
                   </form>
@@ -152,7 +155,7 @@ export default function ForgotPassword() {
               </div>
             </div>
           </div>
-          <div className="h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full flex justify-center items-center pb-5">
+          <div className="hidden h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full lg:flex justify-center items-center pb-5">
             <Image
               src={authImage}
               alt=""

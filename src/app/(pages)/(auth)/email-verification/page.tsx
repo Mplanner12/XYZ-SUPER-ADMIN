@@ -75,26 +75,26 @@ export default function VerifyEmail() {
   };
 
   return (
-    <section className="bg-foundation-white-white-400 flex justify-center items-center text-gray-500 lg:p-28 h-screen">
-      <div className="py-6 px-6 sm:px-16 w-full">
-        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg">
-          <div className="flex h-auto w-full flex-col justify-between items-start text-start px-4 py-2 md:py-0">
-            <div className="mb-2">
+    <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
+      <div className="py-6 px-6 sm:px-16 w-full mt-12 lg:mt-0 relative z-10">
+        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg bg-foundation-black-black-500/80 backdrop-blur-md">
+          <div className="max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-16 py-2 md:py-0">
+            <div className="mb-2 flex justify-start items-center gap-x-2">
               <Image
                 src={logoxyz}
                 alt=""
                 className="w-[74px] h-7 object-contain"
               />
+              <h1 className="text-lg font-semibold text-foundation-purple-purple-400">
+                Email Verification
+              </h1>
             </div>
-            <div className="flex flex-col w-full justify-center items-center text-base font-inter sm:mt-6 lg:mt-4">
+            <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-12">
               <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
-                <h2 className="w-full font-normal text-start text-gray-700 mb-5 font-DmSans">
-                  Email Verification
-                </h2>
-                <p className="w-full font-normal text-start text-gray-700 mb-8">
+                <h2 className="w-full font-normal text-start text-foundation-white-white-400 my-2.5 font-DmSans">
                   Kindly enter the five-digit verification code sent to your
                   email address.
-                </p>
+                </h2>
                 <form
                   method="POST"
                   className="w-full"
@@ -114,14 +114,14 @@ export default function VerifyEmail() {
                       )}
                     />
                   </div>
-                  <NavButton styles="w-full mb-6 mt-8 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100">
+                  <NavButton styles="w-full mb-6 mt-8 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
                     {isPending ? "Verifying..." : "Submit Code"}
                   </NavButton>
                   <p className="text-base text-gray-700 text-center my-0">
                     {`Didn't`} receive the code{" "}
                     <a
                       href="#"
-                      className="text-foundation-purple-purple-400 hover:text-foundation-purple-purple-200"
+                      className="text-foundation-purple-purple-400 hover:text-foundation-purple-purple-300"
                       onClick={handleResendCode}
                     >
                       Resend Code
@@ -132,7 +132,7 @@ export default function VerifyEmail() {
               </div>
             </div>
           </div>
-          <div className="h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full flex justify-center items-center pb-5">
+          <div className="hidden h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full lg:flex justify-center items-center pb-5">
             <Image
               src={authImage}
               alt=""

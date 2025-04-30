@@ -31,12 +31,12 @@ export default function CreateNewPassword() {
   };
 
   return (
-    <section className="bg-foundation-white-white-400 flex justify-center items-center text-gray-500 lg:p-28 h-screen">
+    <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
       {isPending && <LoadingOverlay />}
-      <div className="py-6 px-6 sm:px-16 w-full">
-        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg">
-          <div className="flex h-auto w-full flex-col justify-between items-start text-start px-4 py-2 md:py-0">
-            <div className="mb-2">
+      <div className="py-6 px-6 sm:px-16 w-full mt-12 lg:mt-0 relative z-10">
+        <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg bg-foundation-black-black-500/80 backdrop-blur-md">
+          <div className="max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-16 py-2 md:py-0">
+            <div className="mb-2 flex justify-start items-center gap-x-2">
               <Link href={"/"}>
                 <Image
                   src={logoxyz}
@@ -44,13 +44,13 @@ export default function CreateNewPassword() {
                   className="w-[74px] h-7 object-contain"
                 />
               </Link>
+              <h1 className="text-lg font-semibold text-foundation-purple-purple-400">
+                Create a New Password
+              </h1>
             </div>
-            <div className="flex flex-col w-full justify-center items-center text-base font-inter sm:mt-6 lg:mt-4">
+            <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-12">
               <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
-                <h2 className="w-full font-normal text-start text-gray-700 mb-5 font-DmSans">
-                  Create a New Password
-                </h2>
-                <p className="w-full font-normal text-wrap text-start text-gray-700 mb-5">
+                <p className="w-full font-normal text-wrap text-start text-foundation-white-white-400 mb-5">
                   Kindly create a new password.
                 </p>
                 <form
@@ -59,7 +59,7 @@ export default function CreateNewPassword() {
                   onSubmit={handleSubmit(onSubmit)}
                 >
                   <label htmlFor="new_password" className="block mb-2.5">
-                    <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                    <span className="text-foundation-grey-grey-300 text-[0.9rem]">
                       Password
                     </span>
                     <PasswordInput
@@ -78,7 +78,7 @@ export default function CreateNewPassword() {
                     )}
                   </label>
                   <label htmlFor="confirm_password" className="block mb-2.5">
-                    <span className="text-foundation-grey-grey-900 text-[0.9rem]">
+                    <span className="text-foundation-grey-grey-300 text-[0.9rem]">
                       Confirm Password
                     </span>
                     <PasswordInput
@@ -96,14 +96,14 @@ export default function CreateNewPassword() {
                       </span>
                     )}
                   </label>
-                  <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-200 active:bg-foundation-purple-purple-100 rounded-md py-1.5">
+                  <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
                     {isPending ? "Submitting..." : "Submit"}
                   </NavButton>
                 </form>
               </div>
             </div>
           </div>
-          <div className="h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full flex justify-center items-center pb-5">
+          <div className="hidden h-auto bg-foundation-purple-purple-400 rounded-none rounded-tr-xl rounded-r-xl sm:px-0 px-4 w-full lg:flex justify-center items-center pb-5">
             <Image
               src={authImage}
               alt=""
