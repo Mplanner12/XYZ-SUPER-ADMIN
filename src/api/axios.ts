@@ -17,15 +17,15 @@ if (typeof window !== "undefined") {
 }
 
 export const publicApi = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "https://xyz-backend.onrender.com/v1/",
 });
 
 export const privateApi = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "https://xyz-backend.onrender.com/v1/",
   // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
-  }
+  },
 });
 
 privateApi.interceptors.request.use(
@@ -53,7 +53,7 @@ privateApi.interceptors.response.use(
       // Handle error refreshing refresh token
       // Log the user out and redirect to login page
       localStorage.clear();
-      toast.info("Session timeout")
+      toast.info("Session timeout");
       if (window.location) window.location.href = "/login";
     }
     return Promise.reject(error);

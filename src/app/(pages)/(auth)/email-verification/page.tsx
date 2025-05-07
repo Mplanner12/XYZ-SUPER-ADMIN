@@ -1,8 +1,7 @@
 "use client";
-
+import axios from "axios";
 import NavButton from "@/components/_landingpgComponents/navButton";
-import { useEmailverification, useResendOtp } from "@/hooks/mutate";
-import { useAppSelector } from "@/redux/Store";
+// import { useEmailverification, useResendOtp } from "@/hooks/mutate/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -11,68 +10,81 @@ import { toast } from "react-toastify";
 import { z } from "zod";
 import { authImage, logoxyz } from "../../../../../public";
 import OtpInputField from "../../../../components/otpInput";
+import { axiosInstance } from "@/api/utils/http";
+import { Endpoints } from "@/api/utils/endpoints";
+import { useRouter } from "next/navigation";
 
-// OTP schema
-const otpVerificationSchema = z.object({
-  otp: z.string().length(5, "OTP must be 5 digits"),
+// Verification code schema
+const verificationCodeSchema = z.object({
+  verificationCode: z.string().length(6, "Code must be 6 characters"),
 });
 
-// Type definition
-type VerificationData = z.infer<typeof otpVerificationSchema>;
+// Type definition for verification data
+type VerificationData = z.infer<typeof verificationCodeSchema>;
 
 export default function VerifyEmail() {
   const [email, setEmail] = useState("");
-  const UserEmail = useAppSelector((state: any) => state.Auth.email);
-  const { mutate: otpMutate, isPending } = useEmailverification();
-  const { mutate: resendOtpMutate } = useResendOtp();
+  const [isPending, setPending] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    // Retrieve the email from localStorage when the component mounts
-    const savedEmail = localStorage.getItem("email");
+    const savedEmail = localStorage.getItem("local_store_email");
     if (savedEmail) {
       setEmail(savedEmail);
     }
   }, []);
 
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<VerificationData>({
-    resolver: zodResolver(otpVerificationSchema),
+    resolver: zodResolver(verificationCodeSchema),
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<VerificationData> = (data) => {
-    console.log("Submitted OTP:", data);
-    otpMutate(
-      {
-        ...data,
-        email_address: UserEmail,
-      },
-      {
-        onSuccess: () => {
-          console.log("OTP verified successfully");
-          console.log(UserEmail, "email sent successfully");
-        },
-        onError: (error) => {
-          console.error("Verification error:", error);
-        },
+  const onSubmit: SubmitHandler<VerificationData> = async (data) => {
+    setPending(true);
+    try {
+      const response = await axiosInstance.post(Endpoints.VERIFY_TOKEN, {
+        email: email,
+        token: data.verificationCode,
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        console.log("Verification code verified successfully");
+        toast.success("Verification successful!");
+        router.push("/auth/login");
       }
-    );
+    } catch (error: any) {
+      console.error(
+        "Verification error:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to verify OTP. Please try again.");
+    }
+    setPending(false);
   };
 
-  // Handle code resend
-  const handleResendCode = () => {
-    if (!email) {
-      toast("Email not available");
-      return;
-    }
-    resendOtpMutate({
-      email_address: email,
-    });
-  };
+  // const handleResendCode = async () => {
+  //   if (!email) {
+  //     toast("Email not available");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await axios.post("/auth/direct/resend-otp", {
+  //       email_address: email,
+  //     });
+
+  //     if (response.status === 200) {
+  //       toast.success("Verification code resent successfully!");
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Resend error:", error.response?.data || error.message); // Added type annotation
+  //     toast.error("Failed to resend OTP. Please try again.");
+  //   }
+  // };
 
   return (
     <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
@@ -92,7 +104,7 @@ export default function VerifyEmail() {
             <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-12">
               <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
                 <h2 className="w-full font-normal text-start text-foundation-white-white-400 my-2.5 font-DmSans">
-                  Kindly enter the five-digit verification code sent to your
+                  Kindly enter the five-character verification code sent to your
                   email address.
                 </h2>
                 <form
@@ -102,14 +114,14 @@ export default function VerifyEmail() {
                 >
                   <div>
                     <Controller
-                      name="otp"
+                      name="verificationCode"
                       control={control}
                       render={({ field }) => (
                         <OtpInputField
-                          id="otp"
+                          id="verificationCode"
                           control={control}
-                          name="otp"
-                          error={errors.otp?.message}
+                          name="verificationCode"
+                          error={errors.verificationCode?.message}
                         />
                       )}
                     />
@@ -117,7 +129,7 @@ export default function VerifyEmail() {
                   <NavButton styles="w-full mb-6 mt-8 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
                     {isPending ? "Verifying..." : "Submit Code"}
                   </NavButton>
-                  <p className="text-base text-gray-700 text-center my-0">
+                  {/* <p className="text-base text-gray-700 text-center my-0">
                     {`Didn't`} receive the code{" "}
                     <a
                       href="#"
@@ -127,7 +139,7 @@ export default function VerifyEmail() {
                       Resend Code
                     </a>
                     {isPending && <span> Sending...</span>}
-                  </p>
+                  </p> */}
                 </form>
               </div>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 import NavButton from "@/components/_landingpgComponents/navButton";
 import LoadingOverlay from "@/components/reusable/LoadingOverlay";
-import { useLogin } from "@/hooks/mutate";
+import { useLogin } from "../../../../api/auth/login";
 import { loginFormSchema } from "@/lib/api/definition";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -12,14 +12,17 @@ import { z } from "zod";
 import { authImage, googleicon, logoxyz } from "../../../../../public";
 import useGeolocation from "./GenerateLocation";
 import { toast } from "react-toastify";
+import { setAccessToken } from "@/api/utils/token";
+import { storeUserInRedux } from "@/api/utils/setAuthUser";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 type LoginData = z.infer<typeof loginFormSchema>;
 
 export default function LogIn() {
-  const { latitude, longitude, address, error } = useGeolocation();
-
-  // API CALL
+  const dispatch = useDispatch();
   const { mutate: loginMutate, isPending } = useLogin();
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -30,51 +33,62 @@ export default function LogIn() {
   });
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
-    if (error) {
-      console.log("Geolocation error:", error);
-    }
+    loginMutate(data, {
+      onSuccess: (response: {
+        data: {
+          access_token: string;
+          refresh_token: string;
+          user: any;
+          message?: string;
+        };
+      }) => {
+        const {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          user,
+        } = response.data; // Destructure from response.data
+        setAccessToken(accessToken);
 
-    event?.preventDefault();
-    loginMutate(
-      {
-        ...data,
-        longitude: longitude?.toString() || "",
-        latitude: latitude?.toString() || "",
-        address: address || "",
+        storeUserInRedux(dispatch, {
+          name: user.name,
+          email: user.email,
+          userId: user.id,
+          accessToken,
+        });
+
+        toast.success("Login successful!");
+        router.push("/dasboard");
       },
-      {
-        onError(error) {
-          if (error.message === "Network Error") {
-            toast.error("Network error: check your internet connection.");
-          } else {
-            toast.error(`Error: ${error.message}`);
-          }
-        },
-      }
-    );
+      onError(error: any) {
+        if (error.message === "Network Error") {
+          toast.error("Network error: check your internet connection.");
+        } else {
+          toast.error(
+            error?.response?.data?.message || "Login failed. Please try again."
+          );
+        }
+      },
+    });
   };
 
   return (
     <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
       {isPending && <LoadingOverlay />}
-      <div className="py-6 px-6 sm:px-16 w-full mt-12 lg:mt-0 relative z-10">
+      <div className="py-6 px-6 sm:px-16 w-full mt-8 xl:mt-12 lg:mt-0 relative z-10">
         <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg bg-foundation-black-black-500/80 backdrop-blur-md">
-          <div className="max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-16 py-2 md:py-0">
-            <div className="mb-2 flex justify-start items-center gap-x-2">
+          <div className="lg:max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-8 xl:px-16 py-2 md:py-0">
+            <div className="mb-2 xl:mb-0 flex justify-start items-center gap-x-2 lg:mt-4">
               <Link href={"/"}>
                 <Image
                   src={logoxyz}
                   alt=""
-                  className="w-[74px] h-7 object-contain"
+                  className="w-[70px] h-5 object-contain"
                 />
               </Link>
-              <h1 className="text-lg font-semibold text-foundation-purple-purple-400">
-                Admin
-              </h1>
             </div>
-            <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-12">
-              <div className="max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
-                <h2 className="w-full font-normal text-start text-foundation-white-white-400 my-2.5 font-DmSans">
+            <div className="flex flex-col w-full justify-center items-center text-base font-inter mt-7">
+              <div className="lg:max-w-[450px] md:w-full flex flex-col justify-start text-start items-center">
+                <h2 className="w-full font-normal text-start text-foundation-white-white-400 text-lg xl:text-3xl xl:my-2.5 leading-tight font-DmSans">
                   Login using your credentials
                 </h2>
 
@@ -84,8 +98,11 @@ export default function LogIn() {
                   onSubmit={handleSubmit(onSubmit)}
                 >
                   <div>
-                    <label htmlFor="email_address" className="block mb-2.5">
-                      <span className="text-foundation-grey-grey-300 text-[0.9rem]">
+                    <label
+                      htmlFor="email_address"
+                      className="block mb-1.5 xl:mb-2.5"
+                    >
+                      <span className="text-foundation-grey-grey-300 text-sm xl:text-[0.9rem]">
                         Email Address
                       </span>
                       <input
@@ -93,27 +110,27 @@ export default function LogIn() {
                         id="email_address"
                         placeholder="Enter your email address"
                         className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
-                        {...register("email_address", {
+                        {...register("email", {
                           required: true,
                         })}
                       />
                       {/* error handler */}
-                      {errors.email_address && (
+                      {errors.email && (
                         <span className="error-message px-2 text-red-500">
-                          {errors.email_address.message}
+                          {errors.email.message}
                         </span>
                       )}
                     </label>
 
-                    <label className="block mb-2.5">
-                      <span className="text-foundation-grey-grey-300 text-[0.9rem]">
+                    <label className="block mb-1.5 xl:mb-2.5">
+                      <span className="text-foundation-grey-grey-300 text-sm xl:text-[0.9rem]">
                         Password
                       </span>
                       <input
                         type="password"
                         id="password"
                         placeholder="Create a password"
-                        className="px-4 py-1.5 mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
+                        className="px-2 xl:px-4 py-0.5 lg:py-1.5 xl:py-3 mt-0.5 xl:mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
                         {...register("password", {
                           required: true,
                         })}
@@ -136,10 +153,10 @@ export default function LogIn() {
                       </Link>
                     </p>
                   </div>
-                  <NavButton styles="w-full mb-2.5 mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-1.5 transition-all duration-300">
+                  <NavButton styles="w-full my-1 xl:mb-2.5 xl:mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-0.5 xl:py-1.5 transition-all duration-300">
                     {isPending ? "Logging in..." : "Login"}
                   </NavButton>
-                  <p className="text-[0.9rem] text-gray-700 text-center">
+                  <p className="text-sm xl:text-[0.9rem] text-gray-700 text-center">
                     {`don't`} have an account{" "}
                     <a
                       href="/signup"
@@ -149,7 +166,7 @@ export default function LogIn() {
                     </a>
                   </p>
 
-                  <div className="flex justify-center mb-5 gap-2.5 text-gray-700 text-[18px] mt-8">
+                  <div className="flex justify-center mb-3 xl:mb-3.5 gap-1.5 xl:gap-2.5 text-gray-700 text-[14.5px] xl:text-[18px] mt-4 xl:mt-6">
                     <button className="relative bg-foundation-purple-purple-400 text-white rounded-2xl border-2 border-transparent cursor-pointer flex items-center justify-center font-semibold py-2.5 px-6 gap-[10px] text-center align-middle transition-all duration-300 hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200">
                       <Image
                         src={googleicon}
