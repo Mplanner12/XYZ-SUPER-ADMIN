@@ -2,6 +2,7 @@
 import NavButton from "@/components/_landingpgComponents/navButton";
 import LoadingOverlay from "@/components/reusable/LoadingOverlay";
 import { useLogin } from "../../../../api/auth/login";
+import { useGoogleLogin } from "../../../../api/auth/googleLogin";
 import { loginFormSchema } from "@/lib/api/definition";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -9,19 +10,21 @@ import Link from "next/link";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { authImage, googleicon, logoxyz } from "../../../../../public";
-import useGeolocation from "./GenerateLocation";
+import { authImage, logoxyz } from "../../../../../public";
 import { toast } from "react-toastify";
 import { setAccessToken } from "@/api/utils/token";
 import { storeUserInRedux } from "@/api/utils/setAuthUser";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 type LoginData = z.infer<typeof loginFormSchema>;
 
 export default function LogIn() {
   const dispatch = useDispatch();
   const { mutate: loginMutate, isPending } = useLogin();
+  const { mutate: googleLoginMutate, isPending: isGoogleLoggingIn } =
+    useGoogleLogin(); // Added for Google Login
   const router = useRouter();
 
   const {
@@ -71,9 +74,65 @@ export default function LogIn() {
     });
   };
 
+  const handleGoogleLogin = (googleToken: string) => {
+    googleLoginMutate(
+      { credential: googleToken },
+      {
+        onSuccess: (apiResult: {
+          // Assuming apiResult structure similar to signup's Google login
+          access_token: string;
+          user: {
+            name: string;
+            email: string;
+            id: string;
+          };
+          message?: string;
+        }) => {
+          const { access_token: accessToken, user, message } = apiResult;
+
+          setAccessToken(accessToken);
+          storeUserInRedux(dispatch, {
+            name: user.name,
+            email: user.email,
+            userId: user.id,
+            accessToken,
+          });
+          toast.success(message || "Google sign-in successful!");
+          router.push("/dasboard"); // Consistent with existing login redirect
+        },
+        onError: (error: any) => {
+          console.error("[GOOGLE LOGIN API ERROR]:", error?.response?.data);
+          toast.error(
+            error?.response?.data?.message ||
+              "Google sign-in failed. Please try again."
+          );
+        },
+      }
+    );
+  };
+
+  // Handler for successful Google login from <GoogleLogin /> component
+  const onGoogleLoginSuccess = (credentialResponse: CredentialResponse) => {
+    if (credentialResponse.credential) {
+      handleGoogleLogin(credentialResponse.credential);
+    } else {
+      toast.error("Google Sign-In failed: No credential received.");
+      console.error(
+        "Google Sign-In failed: No credential received.",
+        credentialResponse
+      );
+    }
+  };
+
+  // Handler for Google login errors from <GoogleLogin /> component
+  const onGoogleLoginError = () => {
+    toast.error("Google Sign-In failed. Please try again.");
+    console.error("Google Sign-In Error from <GoogleLogin /> component");
+  };
+
   return (
     <section className="bg-foundation-purple-purple-900 flex justify-center items-start lg:items-center text-gray-500 lg:p-28 h-screen relative overflow-hidden">
-      {isPending && <LoadingOverlay />}
+      {(isPending || isGoogleLoggingIn) && <LoadingOverlay />}
       <div className="py-6 px-6 sm:px-16 w-full mt-8 xl:mt-12 lg:mt-0 relative z-10">
         <div className="w-full flex flex-col md:flex-row justify-center items-start lg:gap-x-4 rounded-xl shadow-lg bg-foundation-black-black-500/80 backdrop-blur-md">
           <div className="lg:max-w-[520px] flex h-auto w-full flex-col justify-between items-start text-start px-8 xl:px-16 py-2 md:py-0">
@@ -153,7 +212,10 @@ export default function LogIn() {
                       </Link>
                     </p>
                   </div>
-                  <NavButton styles="w-full my-1 xl:mb-2.5 xl:mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-0.5 xl:py-1.5 transition-all duration-300">
+                  <NavButton
+                    styles="w-full my-1 xl:mb-2.5 xl:mt-1.5 bg-foundation-purple-purple-400 text-white hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200 rounded-md py-0.5 xl:py-1.5 transition-all duration-300"
+                    disabled={isPending || isGoogleLoggingIn}
+                  >
                     {isPending ? "Logging in..." : "Login"}
                   </NavButton>
                   <p className="text-sm xl:text-[0.9rem] text-gray-700 text-center">
@@ -166,18 +228,22 @@ export default function LogIn() {
                     </a>
                   </p>
 
+                  <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
+                    <p className="mx-4 mb-0 text-center font-semibold text-foundation-grey-grey-300">
+                      OR
+                    </p>
+                  </div>
+
                   <div className="flex justify-center mb-3 xl:mb-3.5 gap-1.5 xl:gap-2.5 text-gray-700 text-[14.5px] xl:text-[18px] mt-4 xl:mt-6">
-                    <button className="relative bg-foundation-purple-purple-400 text-white rounded-2xl border-2 border-transparent cursor-pointer flex items-center justify-center font-semibold py-2.5 px-6 gap-[10px] text-center align-middle transition-all duration-300 hover:bg-foundation-purple-purple-300 active:bg-foundation-purple-purple-200">
-                      <Image
-                        src={googleicon}
-                        alt="Google icon"
-                        className="filter brightness-0 invert"
-                      />
-                      <span className="relative z-10 glow-effect">
-                        Sign in with Google
-                      </span>
-                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-foundation-purple-purple-300 to-foundation-purple-purple-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></span>
-                    </button>
+                    <GoogleLogin
+                      onSuccess={onGoogleLoginSuccess}
+                      onError={onGoogleLoginError}
+                      useOneTap={false}
+                      text="signin_with"
+                      theme="outline"
+                      shape="pill"
+                      size="large"
+                    />
                   </div>
                 </form>
               </div>
