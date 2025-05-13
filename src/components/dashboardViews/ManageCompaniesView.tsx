@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { LuBriefcase, LuPlusCircle } from "react-icons/lu";
+import { LuBriefcase } from "react-icons/lu";
+import { CiCirclePlus } from "react-icons/ci";
 
 const ManageCompaniesView: React.FC = () => {
   return (
@@ -11,7 +12,7 @@ const ManageCompaniesView: React.FC = () => {
           Manage Companies
         </h2>
         <button className="px-4 py-2 bg-foundation-green-green-500 text-white font-semibold rounded-lg hover:bg-foundation-green-green-600 transition-colors flex items-center">
-          <LuPlusCircle className="mr-2" /> Add New Company
+          <CiCirclePlus className="mr-2" /> Add New Company
         </button>
       </div>
       <p className="text-foundation-grey-grey-300">

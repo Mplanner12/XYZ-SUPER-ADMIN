@@ -2,7 +2,8 @@
 import React from "react";
 import { BusinessDetails } from "@/api/admin/getBusiness"; // Assuming this type is available
 import SkeletonCard from "../reusable/SkeletonCard";
-import { LuLayoutDashboard, LuBarChart3, LuActivity } from "react-icons/lu";
+import { LuLayoutDashboard, LuActivity } from "react-icons/lu";
+import { IoBarChartSharp } from "react-icons/io5";
 
 interface OverviewViewProps {
   activeCompany: BusinessDetails | null | undefined;
@@ -46,7 +47,7 @@ const OverviewView: React.FC<OverviewViewProps> = ({
           {/* Example Stat Card 1 */}
           <div className="p-6 bg-foundation-black-black-400/70 rounded-lg shadow">
             <h4 className="text-lg font-semibold text-foundation-purple-purple-300 mb-2 flex items-center">
-              <LuBarChart3 className="mr-2" />
+              <IoBarChartSharp className="mr-2" />
               Key Metric 1
             </h4>
             <p className="text-3xl font-bold text-foundation-white-white-200">
