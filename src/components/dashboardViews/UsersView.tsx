@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import SkeletonCard from "../reusable/SkeletonCard";
-import { LuUsers, LuPlusCircle, LuSearch } from "react-icons/lu";
-
+import { LuUsers, LuSearch } from "react-icons/lu";
+import { CiCirclePlus } from "react-icons/ci";
 // Placeholder for User type - replace with your actual User type
 interface User {
   id: string;
@@ -63,7 +63,7 @@ const UsersView: React.FC<UsersViewProps> = ({ activeCompanyId }) => {
           User Management
         </h2>
         <button className="px-4 py-2 bg-foundation-purple-purple-500 text-white font-semibold rounded-lg hover:bg-foundation-purple-purple-600 transition-colors flex items-center">
-          <LuPlusCircle className="mr-2" /> Add New User
+          <CiCirclePlus className="mr-2" /> Add New User
         </button>
       </div>
 
