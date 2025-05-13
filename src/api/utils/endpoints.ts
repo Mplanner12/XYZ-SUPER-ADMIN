@@ -13,14 +13,15 @@ export const Endpoints = {
   VERIFY_ACCESS_TOKEN: "/auth/direct/verify",
   REFRESH_TOKEN: "/auth/direct/refresh",
   // Business
-  CREATE_BUSINESS: "/business",
-  GET_BUSINESS: "/business",
-  UPDATE_BUSINESS: (id: string | number) => `/business/${id}`,
-  DELETE_BUSINESS: (id: string | number) => `/business/${id}`,
+  CREATE_BUSINESS: "admin/business",
+  GET_BUSINESS: "admin/business",
+  UPDATE_BUSINESS: (id: string | number) => `admin/business/${id}`,
+  DELETE_BUSINESS: (id: string | number) => `admin/business/${id}`,
 
   // Company
   CREATE_COMPANY: "/company",
   GET_COMPANIES: "/companies",
+  GET_COMPANY_DETAILS: (id: string | number) => `/company/${id}`,
   UPDATE_COMPANY: (id: string | number) => `/company/${id}`,
   DELETE_COMPANY: (id: string | number) => `/company/${id}`,
 

@@ -7,25 +7,30 @@ import { loginFormSchema } from "@/lib/api/definition";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { authImage, logoxyz } from "../../../../../public";
 import { toast } from "react-toastify";
-import { setAccessToken } from "@/api/utils/token";
+import { setAccessToken, setRefreshToken } from "@/api/utils/token"; // Import setRefreshToken
 import { storeUserInRedux } from "@/api/utils/setAuthUser";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { LuEye, LuEyeOff } from "react-icons/lu";
+import { useGetBusiness } from "@/api/admin/getBusiness";
 
 type LoginData = z.infer<typeof loginFormSchema>;
 
 export default function LogIn() {
   const dispatch = useDispatch();
+  const [passwordType, setPasswordType] = useState("password");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const { mutate: loginMutate, isPending } = useLogin();
   const { mutate: googleLoginMutate, isPending: isGoogleLoggingIn } =
-    useGoogleLogin(); // Added for Google Login
+    useGoogleLogin();
   const router = useRouter();
+  const { data: business, isLoading } = useGetBusiness();
 
   const {
     handleSubmit,
@@ -49,8 +54,9 @@ export default function LogIn() {
           access_token: accessToken,
           refresh_token: refreshToken,
           user,
-        } = response.data; // Destructure from response.data
+        } = response.data;
         setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
 
         storeUserInRedux(dispatch, {
           name: user.name,
@@ -60,7 +66,24 @@ export default function LogIn() {
         });
 
         toast.success("Login successful!");
-        router.push("/dasboard");
+        setTimeout(() => {
+          toast.info("Redirecting ...");
+          if (isLoading) {
+            <div className="flex justify-center items-center h-screen">
+              <div
+                className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500"
+                role="status"
+              >
+                <span className="sr-only">Loading...</span>
+              </div>
+              <span className="ml-4 text-gray-500">Loading...</span>
+            </div>;
+          } else if (!business) {
+            router.push("/businessSetup");
+          } else {
+            router.push("/dashboard");
+          }
+        }, 1250);
       },
       onError(error: any) {
         if (error.message === "Network Error") {
@@ -79,7 +102,6 @@ export default function LogIn() {
       { credential: googleToken },
       {
         onSuccess: (apiResult: {
-          // Assuming apiResult structure similar to signup's Google login
           access_token: string;
           user: {
             name: string;
@@ -98,7 +120,7 @@ export default function LogIn() {
             accessToken,
           });
           toast.success(message || "Google sign-in successful!");
-          router.push("/dasboard"); // Consistent with existing login redirect
+          router.push("/dashboard");
         },
         onError: (error: any) => {
           console.error("[GOOGLE LOGIN API ERROR]:", error?.response?.data);
@@ -185,22 +207,42 @@ export default function LogIn() {
                       <span className="text-foundation-grey-grey-300 text-sm xl:text-[0.9rem]">
                         Password
                       </span>
-                      <input
-                        type="password"
-                        id="password"
-                        placeholder="Create a password"
-                        className="px-2 xl:px-4 py-0.5 lg:py-1.5 xl:py-3 mt-0.5 xl:mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300"
-                        {...register("password", {
-                          required: true,
-                        })}
-                      />
-                      {/* error handler */}
+
+                      <div className="relative">
+                        <input
+                          type={passwordType}
+                          id="password"
+                          placeholder="Create a password"
+                          className="px-2 xl:px-4 py-0.5 lg:py-1.5 xl:py-3 mt-0.5 xl:mt-1 placeholder:text-foundation-grey-grey-700 w-full rounded-lg border-[1px] border-solid border-[#d0d0d0] bg-foundation-black-black-400 text-foundation-white-white-400 focus:border-foundation-purple-purple-400 focus:ring-2 focus:ring-foundation-purple-purple-300 transition-all duration-300 pr-10"
+                          {...register("password", {
+                            required: true,
+                          })}
+                        />
+
+                        <span
+                          className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+                          onClick={() => {
+                            setIsPasswordVisible(!isPasswordVisible);
+                            setPasswordType(
+                              isPasswordVisible ? "password" : "text"
+                            );
+                          }}
+                        >
+                          {isPasswordVisible ? (
+                            <LuEye size={18} color="#8a8a8a" />
+                          ) : (
+                            <LuEyeOff size={18} color="#8a8a8a" />
+                          )}
+                        </span>
+                      </div>
+
                       {errors.password && (
                         <span className="error-message px-2 text-red-500">
                           {errors.password.message}
                         </span>
                       )}
                     </label>
+
                     <p className="text-sm text-foundation-grey-grey-300 text-start my-1.5">
                       Forgotten password
                       <Link
