@@ -18,7 +18,6 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { useGetBusiness } from "@/api/admin/getBusiness";
 
 type LoginData = z.infer<typeof loginFormSchema>;
 
@@ -30,7 +29,6 @@ export default function LogIn() {
   const { mutate: googleLoginMutate, isPending: isGoogleLoggingIn } =
     useGoogleLogin();
   const router = useRouter();
-  const { data: business, isLoading } = useGetBusiness();
 
   const {
     handleSubmit,
@@ -67,22 +65,8 @@ export default function LogIn() {
 
         toast.success("Login successful!");
         setTimeout(() => {
-          toast.info("Redirecting ...");
-          if (isLoading) {
-            <div className="flex justify-center items-center h-screen">
-              <div
-                className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-gray-500"
-                role="status"
-              >
-                <span className="sr-only">Loading...</span>
-              </div>
-              <span className="ml-4 text-gray-500">Loading...</span>
-            </div>;
-          } else if (!business) {
-            router.push("/businessSetup");
-          } else {
-            router.push("/dashboard");
-          }
+          toast.info("Redirecting to dashboard...");
+          router.push("/dashboard");
         }, 1250);
       },
       onError(error: any) {

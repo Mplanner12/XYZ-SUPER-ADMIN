@@ -40,7 +40,6 @@ const DashboardPage: React.FC = () => {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState<ActiveView>("overview");
-  // For now, we'll use the main 'business' for views that might expect sub-company details
   const { data: business, isLoading, error } = useGetBusiness();
 
   const handleLogout = () => {
@@ -91,18 +90,18 @@ const DashboardPage: React.FC = () => {
 
   const renderActiveView = () => {
     switch (activeView) {
-      case "overview": // OverviewView might expect sub-company, adapt to main business for now
+      case "overview":
         return (
           <OverviewView
-            activeCompany={business} // Pass main business as activeCompany
+            activeCompany={business}
             isLoadingCompany={isLoading}
-            mainBusinessName={business?.company_name} // Pass main business name
+            mainBusinessName={business?.company_name}
           />
         );
-      case "company_details": // CompaniesView might expect sub-company, adapt to main business
+      case "company_details":
         return (
           <CompaniesView
-            activeCompanyDetails={business} // Pass main business
+            activeCompanyDetails={business}
             isLoading={isLoading}
             error={error}
           />
@@ -131,7 +130,7 @@ const DashboardPage: React.FC = () => {
 
   if (error) {
     router.push("/businessSetup");
-    return null; // Redirect to business setup if error occurs
+    return null;
   }
 
   return (
