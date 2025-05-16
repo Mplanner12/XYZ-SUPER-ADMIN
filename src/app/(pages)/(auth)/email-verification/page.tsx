@@ -54,7 +54,7 @@ export default function VerifyEmail() {
       if (response.status === 200 || response.status === 201) {
         console.log("Verification code verified successfully");
         toast.success("Verification successful!");
-        router.push("/auth/login");
+        router.push("/login");
       }
     } catch (error: any) {
       console.error(

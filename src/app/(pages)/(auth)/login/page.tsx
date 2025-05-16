@@ -72,9 +72,20 @@ export default function LogIn() {
       onError(error: any) {
         if (error.message === "Network Error") {
           toast.error("Network error: check your internet connection.");
+        } else if (error.response && error.response.status === 401) {
+          if (
+            error.response.data &&
+            typeof error.response.data.error === "string"
+          ) {
+            toast.error(error.response.data.error);
+          } else {
+            toast.error("Invalid email or password. Please try again.");
+          }
         } else {
           toast.error(
-            error?.response?.data?.message || "Login failed. Please try again."
+            error?.response?.data?.message ||
+              error?.message ||
+              "Login failed. Please try again."
           );
         }
       },

@@ -128,10 +128,15 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  if (error) {
-    router.push("/businessSetup");
-    return null;
-  }
+  useEffect(() => {
+    if (error) {
+      // Check if the error is specifically "Business details not found"
+      // You might need to inspect the error object structure from useGetBusiness
+      // For example, if error.message or error.response.data.error contains this.
+      toast.error("Business details not found. Redirecting to setup...");
+      router.push("/businessSetup");
+    }
+  }, [error, router]);
 
   return (
     <div className="flex h-screen bg-foundation-grey-grey-900 text-foundation-white-white-400">
@@ -234,7 +239,9 @@ const DashboardPage: React.FC = () => {
         <div className="flex-1 p-6 overflow-y-auto">
           {isLoading && !business ? ( // Show skeleton if loading and no business data yet
             <SkeletonCard />
-          ) : error ? (
+          ) : error ? ( // If there's an error, useEffect will handle redirection.
+            // You might want to show a generic error message or a loader here
+            // while the redirection is happening.
             <p className="text-red-400 text-center py-10">
               Error loading business: {error.message}
             </p>

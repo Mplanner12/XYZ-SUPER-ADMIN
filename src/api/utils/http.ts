@@ -66,7 +66,8 @@ axiosInstance.interceptors.response.use(
     // Check if it's a 401 error, not for the refresh token URL itself, and not already a retry.
     if (
       error.response?.status === 401 &&
-      originalRequest.url !== Endpoints.REFRESH_TOKEN
+      originalRequest.url !== Endpoints.REFRESH_TOKEN &&
+      originalRequest.url !== Endpoints.LOGIN
     ) {
       if (!originalRequest._retry) {
         originalRequest._retry = true;
