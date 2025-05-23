@@ -12,6 +12,7 @@ import {
   LuMenu,
   LuBuilding,
   LuX,
+  LuDollarSign,
 } from "react-icons/lu";
 import { useGetBusiness } from "@/api/admin/getBusiness";
 import { clearTokens } from "@/api/utils/token";
@@ -28,13 +29,15 @@ import CompaniesView from "@/components/dashboardViews/CompaniesView";
 import UsersView from "@/components/dashboardViews/UsersView";
 import SettingsView from "@/components/dashboardViews/SettingsView";
 import ManageCompaniesView from "@/components/dashboardViews/ManageCompaniesView";
+import ModuleSelectionPage from "../module-selection/page";
 
 type ActiveView =
   | "overview"
   | "company_details"
   | "users"
   | "settings"
-  | "manage_companies";
+  | "manage_companies"
+  | "module_subscriptions";
 
 const DashboardPage: React.FC = () => {
   const router = useRouter();
@@ -53,28 +56,58 @@ const DashboardPage: React.FC = () => {
     return name.charAt(0).toUpperCase();
   };
 
-  const sidebarItems = [
+  type SidebarItem = {
+    title: string;
+    viewId: ActiveView;
+    icon?: React.ReactNode;
+    type: string;
+    href?: string;
+  };
+
+  const sidebarItems: SidebarItem[] = [
     {
-      name: "Overview",
-      viewId: "overview" as ActiveView,
+      title: "Overview",
+      viewId: "overview",
       icon: <LuLayoutDashboard />,
+      type: "view",
     },
     {
-      name: "Business Details",
-      viewId: "company_details" as ActiveView,
+      title: "Business Details",
+      viewId: "company_details",
       icon: <LuBuilding />,
+      type: "view",
     },
     {
-      name: "Manage Companies",
-      viewId: "manage_companies" as ActiveView,
+      title: "Manage Companies",
+      viewId: "manage_companies",
       icon: <LuBriefcase />,
+      type: "view",
     },
-    { name: "Users", viewId: "users" as ActiveView, icon: <LuUsers /> },
     {
-      name: "Settings",
-      viewId: "settings" as ActiveView,
-      icon: <LuSettings />,
+      title: "Users",
+      viewId: "users",
+      icon: <LuUsers />,
+      type: "view",
     },
+    {
+      title: "Settings",
+      viewId: "settings",
+      icon: <LuSettings />,
+      type: "view",
+    },
+    {
+      title: "Module Subscriptions",
+      viewId: "module_subscriptions",
+      type: "view",
+    },
+    // Example of a link item if needed:
+    // {
+    //   title: "External Link",
+    //   viewId: "overview",
+    //   type: "link",
+    //   href: "/some-path",
+    //   icon: <LuSomeIcon />,
+    // },
   ];
 
   const formatDate = (dateString?: string) => {
@@ -117,6 +150,8 @@ const DashboardPage: React.FC = () => {
             isLoadingMainBusiness={isLoading}
           />
         );
+      case "module_subscriptions":
+        return <ModuleSelectionPage />;
       default:
         return (
           <OverviewView
@@ -130,9 +165,6 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      // Check if the error is specifically "Business details not found"
-      // You might need to inspect the error object structure from useGetBusiness
-      // For example, if error.message or error.response.data.error contains this.
       toast.error("Business details not found. Redirecting to setup...");
       router.push("/businessSetup");
     }
@@ -155,7 +187,7 @@ const DashboardPage: React.FC = () => {
                 {getInitials(business.company_name)}
               </div>
               <span className="text-lg font-semibold text-white">
-                {business.company_name.length > 12 // Adjusted length for better fit
+                {business.company_name.length > 12
                   ? `${business.company_name.substring(0, 10)}...`
                   : business.company_name}
               </span>
@@ -174,24 +206,46 @@ const DashboardPage: React.FC = () => {
         </div>
         <nav className="flex-grow">
           <ul>
-            {sidebarItems.map((item) => (
-              <li key={item.name} className="mb-3">
-                <button
-                  onClick={() => {
-                    setActiveView(item.viewId);
-                    setIsSidebarOpen(false);
-                  }}
-                  className={`flex items-center w-full p-3 rounded-lg text-foundation-grey-grey-300 hover:bg-foundation-purple-purple-500 hover:text-white transition-colors duration-200 ${
-                    activeView === item.viewId
-                      ? "bg-foundation-purple-purple-600 text-white"
-                      : ""
-                  }`}
-                >
-                  <span className="mr-3 text-xl">{item.icon}</span>
-                  {item.name}
-                </button>
-              </li>
-            ))}
+            {sidebarItems.map((item) => {
+              const isActive =
+                item.type === "view" && activeView === item.viewId;
+              const commonClasses = `flex items-center w-full p-3 rounded-lg text-foundation-grey-grey-300 hover:bg-foundation-purple-purple-500 hover:text-white transition-colors duration-200`;
+              const activeClasses = isActive
+                ? "bg-foundation-purple-purple-600 text-white"
+                : "";
+
+              return (
+                <li key={item.title} className="mb-3">
+                  {" "}
+                  {/* Changed key to item.title for uniqueness */}
+                  {item.type === "link" && item.href ? (
+                    <Link
+                      href={item.href}
+                      className={`${commonClasses} ${
+                        // Add active link styling if current path matches item.href
+                        // e.g., router.pathname === item.href ? "bg-foundation-purple-purple-600 text-white" : ""
+                        "" // Placeholder for active link styling
+                      }`}
+                      onClick={() => setIsSidebarOpen(false)}
+                    >
+                      <span className="mr-3 text-xl">{item.icon}</span>
+                      {item.title}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (item.viewId) setActiveView(item.viewId);
+                        setIsSidebarOpen(false);
+                      }}
+                      className={`${commonClasses} ${activeClasses}`}
+                    >
+                      <span className="mr-3 text-xl">{item.icon}</span>
+                      {item.title}
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <div className="mt-auto">

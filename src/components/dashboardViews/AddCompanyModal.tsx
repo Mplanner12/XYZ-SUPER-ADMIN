@@ -74,9 +74,9 @@ const AddCompanyModal: React.FC<AddCompanyModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="bg-white rounded-lg p-8 w-full max-w-lg shadow-lg transition-transform transform-gpu scale-100 hover:scale-105">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primary-normal">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+      <div className="bg-white bg-opacity-10 backdrop-blur-md shadow-lg rounded-2xl p-8 w-full max-w-lg">
+        <h2 className="text-2xl font-semibold mb-7 text-center text-white">
           Add New Company
         </h2>
 
@@ -93,33 +93,33 @@ const AddCompanyModal: React.FC<AddCompanyModalProps> = ({
               },
               { label: "Base Currency", name: "base_currency", type: "text" },
             ].map(({ label, name, type }) => (
-              <div key={name}>
-                <label className="block text-gray-700 text-sm font-medium">
-                  {label}
-                </label>
+              <div key={name} className="mb-5">
+                <label className="block text-sm text-white mb-1">{label}</label>
                 <input
                   type={type}
-                  {...register(name)}
-                  className="mt-1 block w-full h-12 rounded-md border border-gray-300 shadow-sm focus:border-primary-normal focus:ring focus:ring-primary-normal focus:ring-opacity-50"
+                  {...register(name as keyof CompanyFormData)}
+                  className="w-full px-4 py-2 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400" // Matched businessSetup input style
                 />
-                {errors[name] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[name].message}
+                {errors[name as keyof CompanyFormData] && (
+                  <p className="text-red-500 text-xs mt-1.5">
+                    {errors[name as keyof CompanyFormData]?.message}
                   </p>
                 )}
               </div>
             ))}
 
             <div>
-              <label className="block text-gray-700 text-sm font-medium">
+              <label className="block text-sm text-white mb-1">
+                {" "}
+                {/* Matched label style */}
                 Address
               </label>
               <textarea
                 {...register("address")}
-                className="mt-1 block w-full h-24 rounded-md border border-gray-300 shadow-sm focus:border-primary-normal focus:ring focus:ring-primary-normal focus:ring-opacity-50"
+                className="w-full px-4 py-2.5 rounded-lg border border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 h-24" // Matched businessSetup textarea style
               />
               {errors.address && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-500 text-xs mt-1.5">
                   {errors.address.message}
                 </p>
               )}
@@ -130,14 +130,14 @@ const AddCompanyModal: React.FC<AddCompanyModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors disabled:opacity-50"
+              className="mr-3 px-5 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-60"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-primary-normal text-white rounded-md hover:bg-primary-dark transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-60" // Matched businessSetup primary button
               disabled={isLoading}
             >
               {isLoading ? "Creating..." : "Create"}

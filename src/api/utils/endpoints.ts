@@ -19,15 +19,16 @@ export const Endpoints = {
   DELETE_BUSINESS: (id: string | number) => `admin/business/${id}`,
 
   // Company
-  CREATE_COMPANY: "/company",
-  GET_COMPANIES: "/companies",
-  GET_COMPANY_DETAILS: (id: string | number) => `/company/${id}`,
-  UPDATE_COMPANY: (id: string | number) => `/company/${id}`,
-  DELETE_COMPANY: (id: string | number) => `/company/${id}`,
+  CREATE_COMPANY: "admin/company",
+  GET_COMPANIES: "admin/companies",
+  GET_COMPANY_DETAILS: (id: string | number) => `admin/company/${id}`,
+  UPDATE_COMPANY: (id: string | number) => `admin/update/company/${id}`,
+  DELETE_COMPANY: (id: string | number) => `admin/company/${id}`,
 
   // Modules
   TOGGLE_MODULES: "/purchase/modules",
-  GET_COMPANY_MODULES: (id: string | number) => `/modules/${id}`,
+  GET_COMPANY_MODULES: (companyId: string | number) => `/modules/${companyId}`, // Modules for a specific company (permissions)
+  GET_ALL_MODULES: "/get/all-modules", // New endpoint for module selection/payment
 
   /** ------------------- User & Permissions ------------------- */
   INVITE_USER: "/company/invite-user",

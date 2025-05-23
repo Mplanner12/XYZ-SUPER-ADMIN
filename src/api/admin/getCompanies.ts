@@ -31,6 +31,6 @@ export const useGetCompanies = (
     queryKey: ["companies", businessId],
     queryFn: () => fetchCompanies(businessId),
     enabled: !!businessId && (options?.enabled ?? true),
-    staleTime: 5 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
   });
 };
